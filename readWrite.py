@@ -39,3 +39,7 @@ def f2dmtxDecode(dmtxPath: str, writePath: str):
 
     decde_File = open('decoded.png', 'wb')
     decde_File.write(decoded)
+
+def path_leaf(path):
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)
