@@ -6,11 +6,17 @@ import base64
 #print(Image.open('Capture.PNG').getpixel([5,5]))
 #print(decode(Image.open("IMG_1674.jpg")))
 
-encde_File = open(r'C:\Users\garfi\Pictures\Code\Misc\DataMatrix\lowfrog.jpg', 'rb')
-#encde_Data = base64.b64encode(encde_File.read())
-encde_Data = encde_File.read()
+fileToEncode = open(r'C:\Users\garfi\Pictures\Code\file2dmtx\lowfrog.jpg', 'rb')
 
-encde_File.close()
+rawData = fileToEncode.read()
+
+fileToEncode.close()
+
+# Encode raw bytes for dmtx encoding
+# Encoding raw bytes into dmtx fails for unknown reasons
+#encde_Data = base64.b64encode(encde_File) # Encode with base64
+encde_Data = base64.b85encode(rawData) # Encode with base85(Ascii85) probably the best encoding
+
 
 print(encde_Data)
 

@@ -2,21 +2,16 @@ import base64
 from pylibdmtx.pylibdmtx import decode
 from PIL import Image
 
-#decde_File = open('test.png', 'rb')
-#decde_Data = decde_File.read()
-#decde_File.close()
+matrix = decode(Image.open(r'C:\Users\garfi\Pictures\Code\file2dmtx\dmtx.png'))
+matrixRaw = matrix[0] # Get data on first found matrix
 
-decde_File = decode(Image.open(r'C:\Users\garfi\Pictures\Code\Misc\DataMatrix/dmtx.png'), max_count=None)
-decde_Data = decde_File[0]
+matrixData = str(matrixRaw).split("'")[1] # Get only the data contained in the matrix
 
-decde_Data = str(decde_Data).split("'")
-#decoded = base64.b64decode(decde_Data[1])
-decoded = bytes(decde_Data[1])
+# Decode data using the method it was encoded with
+#decoded = base64.b64decode(matrixData)
+decoded = base64.b85decode(matrixData)
+
 print(decoded)
 
 decde_File = open('decoded.png', 'wb')
 decde_File.write(decoded)
-
-#img = Image.frombytes('RGB', (decde_Data.width, decde_Data.height), decde_Data.pixels)
-#img = Image.frombytes('RGB', (10, 10), decde_Data)
-#img.save('dmtx_decoded.png')
