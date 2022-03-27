@@ -1,6 +1,11 @@
 # file2dmtx
  A program for converting files to data matrix images for analog data storage.
 
+--Requirements--
+Python 3.10 https://www.python.org/downloads/release/python-3104/
+Pillow 9.0+ https://pillow.readthedocs.io/en/stable/
+pylibdmtx 0.1.10 https://pypi.org/project/pylibdmtx/
+
 Encoded structure
 !version!filename!partition!total!data
 
