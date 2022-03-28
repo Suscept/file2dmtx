@@ -7,7 +7,7 @@ Pillow 9.0+ https://pillow.readthedocs.io/en/stable/
 pylibdmtx 0.1.10 https://pypi.org/project/pylibdmtx/
 
 Encoded structure
-!version!filename!partition!total!data
+version!filename!partition!total!data
 
 version: The version number of the data matrix
 filename: The name and file extension of the encoded file
