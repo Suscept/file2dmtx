@@ -1,5 +1,5 @@
 # file2dmtx
- A program for converting files to data matrix images for analog data storage.
+ A program for converting files to [Data Matrix](https://en.wikipedia.org/wiki/Data_Matrix) images for analog data storage.
 
 
 Requirements
