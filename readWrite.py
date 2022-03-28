@@ -50,12 +50,13 @@ def f2dmtxDecode(dmtxPath: str, writePath: str):
     matrixRaw = matrix[0] # Get data on first found matrix
 
     matrixData = str(matrixRaw).split("'")[1] # Get only the data contained in the matrix
+    matrixData = matrixData.split('!', 5)
 
     # Decode data using the method it was encoded with
     #decoded = base64.b64decode(matrixData)
-    decoded = base64.b85decode(matrixData)
+    decoded = base64.b85decode(matrixData[6])
 
     print(decoded)
 
-    decde_File = open('decoded.png', 'wb')
+    decde_File = open(str(matrixData[1]), 'wb')
     decde_File.write(decoded)
