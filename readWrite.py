@@ -16,7 +16,8 @@ def f2dmtxEncode(path: str) -> Image:
     # Encoding raw bytes into dmtx fails for unknown reasons
     #encde_Data = base64.b64encode(encde_File) # Encode with base64
     encde_Data = base64.b85encode(rawData) # Encode with base85(Ascii85) probably the best encoding
-
+    if (len(encde_Data) > 1500):
+        raise ValueError('File larger than 1.5kb! Support for larger files coming soon.')
     print(encde_Data)
 
     encoded = encode(encde_Data, 'base256', )
