@@ -11,6 +11,19 @@ maxPartitionSize = 1555
 def path_leaf(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
+
+# Possible better way than recursive checking
+def partitionData(data, fileName: str):
+    header = bytes('{0}!{1}!1!1!'.format(version, fileName), 'utf8')
+    dataLength = len(data) + len(header)
+    partitions = 1
+
+    while (dataLength > maxPartitionSize * partitions):
+        partitions = ceil(dataLength/maxPartitionSize)
+        header = bytes('{0}!{1}!{2}!{2}!'.format(version, fileName, partitions), 'utf8')
+        dataLength = len(data) + len(header)
+
+    return(header + data)
 def f2dmtxEncode(path: str) -> Image:
     #fileToEncode = open(r'C:\Users\garfi\Pictures\Code\file2dmtx\lowfrog.jpg', 'rb')
     fileToEncode = open(path, 'rb')
