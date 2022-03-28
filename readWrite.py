@@ -4,6 +4,9 @@ from PIL import Image
 import base64
 import ntpath
 
+def path_leaf(path):
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)
 def f2dmtxEncode(path: str) -> Image:
     #fileToEncode = open(r'C:\Users\garfi\Pictures\Code\file2dmtx\lowfrog.jpg', 'rb')
     fileToEncode = open(path, 'rb')
@@ -39,7 +42,3 @@ def f2dmtxDecode(dmtxPath: str, writePath: str):
 
     decde_File = open('decoded.png', 'wb')
     decde_File.write(decoded)
-
-def path_leaf(path):
-    head, tail = ntpath.split(path)
-    return tail or ntpath.basename(head)
