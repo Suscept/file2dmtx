@@ -33,7 +33,6 @@ def partitionData(data, fileName: str):
 
     return(matrices)
 
-    return(header + data)
 def f2dmtxEncode(path: str) -> Image:
     #fileToEncode = open(r'C:\Users\garfi\Pictures\Code\file2dmtx\lowfrog.jpg', 'rb')
     fileToEncode = open(path, 'rb')
