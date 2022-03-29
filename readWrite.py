@@ -36,7 +36,6 @@ def partitionData(data: bytes, fileName: str):
     return(matrices)
 
 def f2dmtxEncode(path: str) -> Image:
-    #fileToEncode = open(r'C:\Users\garfi\Pictures\Code\file2dmtx\lowfrog.jpg', 'rb')
     fileToEncode = open(path, 'rb')
 
     rawData = fileToEncode.read()
@@ -48,15 +47,12 @@ def f2dmtxEncode(path: str) -> Image:
     #encde_Data = base64.b64encode(encde_File) # Encode with base64
     encde_Data = base64.b85encode(rawData) # Encode with base85(Ascii85) probably the best encoding
 
-    print(encde_Data)
 
     encoded = encode(encde_Data, 'base256', )
     img = Image.frombytes('RGB', (encoded.width, encoded.height), encoded.pixels)
     return img
-    #img.save('dmtx.png')
 
 def f2dmtxDecode(dmtxPath: str, writePath: str):
-    #matrix = decode(Image.open(r'C:\Users\garfi\Pictures\Code\file2dmtx\dmtx.png'))
     matrix = decode(Image.open(dmtxPath))
     matrixRaw = matrix[0] # Get data on first found matrix
 
@@ -66,8 +62,6 @@ def f2dmtxDecode(dmtxPath: str, writePath: str):
     # Decode data using the method it was encoded with
     #decoded = base64.b64decode(matrixData)
     decoded = base64.b85decode(matrixData[6])
-
-    print(decoded)
 
     decde_File = open(str(matrixData[1]), 'wb')
     decde_File.write(decoded)
