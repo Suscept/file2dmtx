@@ -35,11 +35,12 @@ def partitionData(data: bytes, fileName: str):
 
     return(matrices)
 
-def f2dmtxEncode(path: str) -> Image:
+
+
+def f2dmtxEncode(path: str):
+    # Read file
     fileToEncode = open(path, 'rb')
-
     rawData = fileToEncode.read()
-
     fileToEncode.close()
 
     # Encode raw bytes for dmtx encoding
@@ -47,10 +48,21 @@ def f2dmtxEncode(path: str) -> Image:
     #encde_Data = base64.b64encode(encde_File) # Encode with base64
     encde_Data = base64.b85encode(rawData) # Encode with base85(Ascii85) probably the best encoding
 
+    fileName = path_leaf(path)
 
-    encoded = encode(encde_Data, 'base256', )
-    img = Image.frombytes('RGB', (encoded.width, encoded.height), encoded.pixels)
-    return img
+    # Partition given data
+    partitions = partitionData(encde_Data, fileName)
+
+    # Create data matrix for each partition
+    images = []
+    for i in range(partitions.count):
+        encoded = encode(partitions[i], 'base256', )
+        img = Image.frombytes('RGB', (encoded.width, encoded.height), encoded.pixels)
+        matrixImg = (fileName + '_' + i + partitions.count - 1, img)
+        images.append(matrixImg)
+
+    return images
+
 
 def f2dmtxDecode(dmtxPath: str, writePath: str):
     matrix = decode(Image.open(dmtxPath))
