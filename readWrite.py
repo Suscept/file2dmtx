@@ -24,8 +24,8 @@ def partitionData(data, fileName: str):
         dataLength = len(data) + len(header) * partitions
     
     matrices = []
+    dataSize = maxPartitionSize - len(header) # How many bytes will be left for data after the header
     for x in range(partitions):
-        dataSize = maxPartitionSize - len(header)
         thisHeader = bytes('{0}!{1}!{2}!{3}!'.format(version, fileName, x, partitions - 1), 'utf8')
         thisData = data[dataSize * x:dataSize * (x + 1)]
         matrix = thisHeader + thisData
