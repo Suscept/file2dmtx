@@ -21,7 +21,7 @@ def partitionData(data, fileName: str):
     while (dataLength > maxPartitionSize * partitions):
         partitions = ceil(dataLength/maxPartitionSize)
         header = bytes('{0}!{1}!{2}!{2}!'.format(version, fileName, partitions), 'utf8')
-        dataLength = len(data) + len(header)
+        dataLength = len(data) + len(header) * partitions
 
     return(header + data)
 def f2dmtxEncode(path: str) -> Image:
