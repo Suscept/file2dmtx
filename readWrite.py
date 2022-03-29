@@ -22,6 +22,16 @@ def partitionData(data, fileName: str):
         partitions = ceil(dataLength/maxPartitionSize)
         header = bytes('{0}!{1}!{2}!{2}!'.format(version, fileName, partitions), 'utf8')
         dataLength = len(data) + len(header) * partitions
+    
+    matrices = []
+    for x in range(partitions):
+        dataSize = maxPartitionSize - len(header)
+        thisHeader = bytes('{0}!{1}!{2}!{3}!'.format(version, fileName, x, partitions - 1), 'utf8')
+        thisData = data[dataSize * x:dataSize * (x + 1)]
+        matrix = thisHeader + thisData
+        matrices.append(matrix)
+
+    return(matrices)
 
     return(header + data)
 def f2dmtxEncode(path: str) -> Image:
