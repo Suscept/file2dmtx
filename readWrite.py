@@ -13,21 +13,23 @@ def path_leaf(path):
     return tail or ntpath.basename(head)
 
 # Possible better way than recursive checking
-def partitionData(data, fileName: str):
-    header = bytes('{0}!{1}!1!1!'.format(version, fileName), 'utf8')
+def partitionData(data: bytes, fileName: str):
+    header = bytes('{0}!{1}!1!1!'.format(version, fileName), 'utf8') # Create a header assuming there will be only one partition
     dataLength = len(data) + len(header)
     partitions = 1
 
+    # Get the amount of partitions needed to store the given data
     while (dataLength > maxPartitionSize * partitions):
         partitions = ceil(dataLength/maxPartitionSize)
         header = bytes('{0}!{1}!{2}!{2}!'.format(version, fileName, partitions), 'utf8')
         dataLength = len(data) + len(header) * partitions
     
+    # Generate the partitions
     matrices = []
     dataSize = maxPartitionSize - len(header) # How many bytes will be left for data after the header
     for x in range(partitions):
         thisHeader = bytes('{0}!{1}!{2}!{3}!'.format(version, fileName, x, partitions - 1), 'utf8')
-        thisData = data[dataSize * x:dataSize * (x + 1)]
+        thisData = data[dataSize * x:dataSize * (x + 1)] # Get the data to be stored in this partition
         matrix = thisHeader + thisData
         matrices.append(matrix)
 
