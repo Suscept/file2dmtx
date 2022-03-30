@@ -12,6 +12,9 @@ def path_leaf(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
 
+def partitionIndex(e):
+    return e[2]
+
 # Possible better way than recursive checking
 def partitionData(data: bytes, fileName: str):
     header = bytes('{0}!{1}!1!1!'.format(version, fileName), 'utf8') # Create a header assuming there will be only one partition
@@ -35,7 +38,32 @@ def partitionData(data: bytes, fileName: str):
 
     return(matrices)
 
+def mergePartitions(partitions):
+    # Decode partitions into a list of tuples
+    decodedPartitions = []
+    for part in partitions:
+        decodedPartitions.append(tuple(bytes(part).split(b'!', 4)))
 
+    # Verify all partitions are for the same file
+    # by checking if all partitions have the same filename as the first given partition
+    for part in decodedPartitions:
+        if (part[1] != decodedPartitions[0][1]):
+            raise ValueError('Mixed partitions! ' + str(part[1]))
+
+    # Verify all partitions are present for the file
+    if (len(decodedPartitions) <= int(decodedPartitions[0][3])):
+        raise ValueError('Missing partition(s)! ' + decodedPartitions.count + '/'+ decodedPartitions[0][3])
+
+    # Sort by index
+    decodedPartitions.sort(key=partitionIndex)
+
+    # Merge each partition's data
+    fileData = bytes()
+    for part in decodedPartitions:
+        fileData += part[4]
+    
+    # Return file as a tuple with it's name and data
+    return (str(decodedPartitions[0][1]), fileData)
 
 def f2dmtxEncode(path: str):
     # Read file
