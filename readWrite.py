@@ -30,7 +30,7 @@ def partitionData(data: bytes, fileName: str):
     for x in range(partitions):
         thisHeader = bytes('{0}!{1}!{2}!{3}!'.format(version, fileName, x, partitions - 1), 'utf8')
         thisData = data[dataSize * x:dataSize * (x + 1)] # Get the data to be stored in this partition
-        matrix = thisHeader + bytes(thisData, 'utf8')
+        matrix = thisHeader + thisData
         matrices.append(matrix)
 
     return(matrices)
