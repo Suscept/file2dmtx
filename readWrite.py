@@ -63,7 +63,8 @@ def mergePartitions(partitions):
         fileData += part[4]
     
     # Return file as a tuple with it's name and data
-    return (str(decodedPartitions[0][1]), fileData)
+    filename = decodedPartitions[0][1].decode("utf-8")
+    return (filename, fileData)
 
 def f2dmtxEncode(path: str):
     # Read file
