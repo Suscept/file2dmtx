@@ -1,4 +1,6 @@
 # file2dmtx
+[![CodeFactor](https://www.codefactor.io/repository/github/suscept/file2dmtx/badge)](https://www.codefactor.io/repository/github/suscept/file2dmtx)
+
  A program for converting files to [Data Matrix](https://en.wikipedia.org/wiki/Data_Matrix) images for analog data storage.
 
 
