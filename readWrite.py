@@ -84,8 +84,8 @@ def f2dmtxEncode(path: str):
 
     # Create data matrix for each partition
     images = []
-    for i in range(len(partitions)):
-        encoded = encode(partitions[i], 'base256', )
+    for i, item in enumerate(partitions):
+        encoded = encode(item, 'base256', )
         img = Image.frombytes('RGB', (encoded.width, encoded.height), encoded.pixels)
         matrixImg = (fileName + '_' + str(i) + str(len(partitions) - 1), img)
         images.append(matrixImg)
