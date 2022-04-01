@@ -5,5 +5,7 @@ filePath = input('Enter path to file:\n')
 
 outputPath = input('Enter output path. Leave blank to output to the same path as the input file.\n')
 
-f2dmtxEncode(filePath).save('dmtx.png')
+dmtxs = f2dmtxEncode(filePath)
+for dmtx in dmtxs:
+    dmtx[1].save(outputPath + "/" + dmtx[0] + '.png')
 print('File saved as dmtx.png')
