@@ -13,6 +13,9 @@ Pillow 9.0+ https://pillow.readthedocs.io/en/stable/
 
 pylibdmtx 0.1.10 https://pypi.org/project/pylibdmtx/
 
+Limitations
+-
+Each Data Matrix only holds around 1.5kb of data, and due to a bug (#3) this is further reduced to around 1.2kb requiring many matrices to store even small files.
 
 Encoding structure
 -
