@@ -92,17 +92,21 @@ def f2dmtxEncode(path: str):
 
     return images
 
+def f2dmtxDecode(image: Image):
+    partitions = []
+    for img in image:
+        matrices = decode(img) # Get all matrices found in the image
 
-def f2dmtxDecode(dmtxPath: str, writePath: str):
-    matrix = decode(Image.open(dmtxPath))
-    matrixRaw = matrix[0] # Get data on first found matrix
+        for matrix in matrices:
+            # Parse only the data encoded in the matrix
+            matrixRaw = matrix[0]
 
-    matrixData = str(matrixRaw).split("'")[1] # Get only the data contained in the matrix
-    matrixData = matrixData.split('!', 5)
+            partitions.append(matrixRaw)
+    
+    matrixData = mergePartitions(partitions)
 
-    # Decode data using the method it was encoded with
-    #decoded = base64.b64decode(matrixData)
-    decoded = base64.b85decode(matrixData[6])
+    # The data is encoded using ASCII85. More information in issue #3
+    decoded = base64.b85decode(matrixData[1])
 
-    decde_File = open(str(matrixData[1]), 'wb')
-    decde_File.write(decoded)
+    # Return filename, and the file's bytes
+    return (matrixData[0], decoded)
