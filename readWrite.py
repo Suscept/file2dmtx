@@ -3,14 +3,9 @@ from pylibdmtx.pylibdmtx import encode
 from pylibdmtx.pylibdmtx import decode
 from PIL import Image
 import base64
-import ntpath
 
 version = 1
 maxPartitionSize = 1555
-
-def path_leaf(path):
-    head, tail = ntpath.split(path)
-    return tail or ntpath.basename(head)
 
 def partitionIndex(e):
     return e[2]
