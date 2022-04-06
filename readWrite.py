@@ -66,28 +66,21 @@ def mergePartitions(partitions):
     filename = decodedPartitions[0][1].decode("utf-8")
     return (filename, fileData)
 
-def f2dmtxEncode(path: str):
-    # Read file
-    fileToEncode = open(path, 'rb')
-    rawData = fileToEncode.read()
-    fileToEncode.close()
-
+def f2dmtxEncode(data: bytes, filename: str):
     # Encode raw bytes for dmtx encoding
     # Encoding raw bytes into dmtx fails for unknown reasons
     #encde_Data = base64.b64encode(encde_File) # Encode with base64
-    encde_Data = base64.b85encode(rawData) # Encode with base85(Ascii85) probably the best encoding
-
-    fileName = path_leaf(path)
+    encde_Data = base64.b85encode(data) # Encode with base85(Ascii85) probably the best encoding
 
     # Partition given data
-    partitions = partitionData(encde_Data, fileName)
+    partitions = partitionData(encde_Data, filename)
 
     # Create data matrix for each partition
     images = []
     for i, item in enumerate(partitions):
         encoded = encode(item, 'base256', )
         img = Image.frombytes('RGB', (encoded.width, encoded.height), encoded.pixels)
-        matrixImg = (fileName + '_' + str(i) +'-'+ str(len(partitions) - 1), img)
+        matrixImg = (filename + '_' + str(i) +'-'+ str(len(partitions) - 1), img)
         images.append(matrixImg)
 
     return images
