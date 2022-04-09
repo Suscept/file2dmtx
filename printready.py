@@ -1,8 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
 
-#width = 816
-#height = 1056
-
 width = 750
 height = 971
 

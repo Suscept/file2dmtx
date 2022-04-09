@@ -9,7 +9,6 @@ from printready import MakePrintReady
 import webbrowser
 
 def PromptOutput():
-    #return filedialog.asksaveasfilename(defaultextension=extension, title='Choose output location', initialfile=filename)
     return filedialog.askdirectory()
 
 def EncodeFile():
