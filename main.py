@@ -21,6 +21,7 @@ def EncodeFile():
 
     # Convert file(s) to data matrix
     for path in filePaths:
+        # Read file data
         fileToEncode = open(path, 'rb')
         rawData = fileToEncode.read()
         fileToEncode.close()
