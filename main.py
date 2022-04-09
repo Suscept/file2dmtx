@@ -5,6 +5,7 @@ from readWrite import f2dmtxEncode
 from readWrite import f2dmtxDecode
 from PIL import Image
 from filenameFromPath import path_leaf
+from printready import MakePrintReady
 import webbrowser
 
 def PromptOutput():
@@ -28,7 +29,14 @@ def EncodeFile():
 
         # Write matrices to disk
         for matrix in matrices:
-            matrix[1].save(outputPath + "/" + matrix[0] + '.png')
+            filename = matrix[0]
+            partitionIndex = matrix[2]
+            totalPartitions = matrix[3]
+
+            printReady =  MakePrintReady(matrix[1], filename, str(partitionIndex + 1) + '/' + str(totalPartitions))
+
+            filename = filename + '_' + str(partitionIndex) + '-' + str(totalPartitions - 1)
+            printReady.save(outputPath + "/" + filename + '.png')
     
     # Success message
     showinfo('Success!', 'Encoded files successfully!')
