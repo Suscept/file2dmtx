@@ -32,11 +32,12 @@ def EncodeFile():
             filename = matrix[0]
             partitionIndex = matrix[2]
             totalPartitions = matrix[3]
+            matrixImage = matrix[1]
 
-            printReady =  MakePrintReady(matrix[1], filename, str(partitionIndex + 1) + '/' + str(totalPartitions))
+            matrixImage = MakePrintReady(matrixImage, filename, str(partitionIndex + 1) + '/' + str(totalPartitions))
 
             filename = filename + '_' + str(partitionIndex) + '-' + str(totalPartitions - 1)
-            printReady.save(outputPath + "/" + filename + '.png')
+            matrixImage.save(outputPath + "/" + filename + '.png')
     
     # Success message
     showinfo('Success!', 'Encoded files successfully!')
