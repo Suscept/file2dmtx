@@ -1,6 +1,7 @@
+import math
 import tkinter as tk
 from tkinter import PhotoImage, filedialog, ttk
-from tkinter.messagebox import showinfo
+from tkinter.messagebox import showinfo, askokcancel, WARNING, INFO
 from readWrite import f2dmtxEncode
 from readWrite import f2dmtxDecode
 from PIL import Image
@@ -8,8 +9,34 @@ from filenameFromPath import path_leaf
 from printready import MakePrintReady
 import webbrowser
 
+matrixSize = 1555
+matricesPerPaper = 18
+largeMatrixThreshold = 100
+outputSizeKb = 150
+
 def PromptOutput():
     return filedialog.askdirectory()
+
+def PromptEncodeConfirm(dataSize: int):
+    matrices = math.ceil(dataSize / matrixSize)
+    pageCount = math.ceil(matrices / matricesPerPaper)
+    outputSize = outputSizeKb * matrices
+
+    answer = False
+    if matrices > largeMatrixThreshold:
+        answer = askokcancel(
+            title='Continue encoding?',
+            message='''!!WARNING!! Encoding will create {matrixCount} matrices, or {pages} double-sided pages, output will be {imageSize} KB. Encoding may take some time.
+            '''.format(matrixCount=matrices, pages=pageCount, imageSize=outputSize),
+            icon=WARNING)
+    else:
+        answer = askokcancel(
+            title='Continue encoding?',
+            message='''Encoding will create {matrixCount} matrices, or {pages} double-sided pages, output will be {imageSize} KB. Continue encoding?
+            '''.format(matrixCount=matrices, pages=pageCount, imageSize=outputSize),
+            icon=INFO)
+
+    return answer
 
 def EncodeFile():
     # Prompt user for file paths
@@ -19,6 +46,9 @@ def EncodeFile():
     outputPath = PromptOutput()
 
     # Convert file(s) to data matrix
+    filenames = []
+    matrixImages = []
+    dataSize = 0
     for path in filePaths:
         # Read file data
         fileToEncode = open(path, 'rb')
@@ -27,17 +57,27 @@ def EncodeFile():
 
         matrices = f2dmtxEncode(rawData, path_leaf(path))
 
-        # Write matrices to disk
+        # Ready matrices for printing and generate filenames
         for matrix in matrices:
             filename = matrix[0]
+            matrixImage = matrix[1]
             partitionIndex = matrix[2]
             totalPartitions = matrix[3]
-            matrixImage = matrix[1]
 
             matrixImage = MakePrintReady(matrixImage, filename, str(partitionIndex + 1) + '/' + str(totalPartitions))
 
             filename = filename + '_' + str(partitionIndex) + '-' + str(totalPartitions - 1)
-            matrixImage.save(outputPath + "/" + filename + '.png')
+            filenames.append(outputPath + "/" + filename + '.png')
+            matrixImages.append(matrixImage)
+            dataSize += matrix[4]
+    
+    # Prompt user to continue encoding
+    if not PromptEncodeConfirm(dataSize):
+            return
+    
+    # Write matrices to disk
+    for i, matrix in enumerate(matrixImages):
+        matrix.save(filenames[i])
     
     # Success message
     showinfo('Success!', 'Encoded files successfully!')
