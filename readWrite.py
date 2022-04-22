@@ -80,7 +80,6 @@ def f2dmtxEncode(data: bytes, filename: str):
 
     return images
 
-def f2dmtxDecode(image: Image):
 def GetBytesFromEncoded(partitions):
     matrixData = mergePartitions(partitions)
 
@@ -88,6 +87,8 @@ def GetBytesFromEncoded(partitions):
     decoded = base64.b85decode(matrixData[1])
 
     return (matrixData[0], decoded)
+
+def DecodeFromImage(image: Image):
     partitions = []
     for img in image:
         matrices = decode(img) # Get all matrices found in the image

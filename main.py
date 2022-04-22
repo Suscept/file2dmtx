@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import PhotoImage, filedialog, ttk
 from tkinter.messagebox import showinfo, askokcancel, WARNING, INFO
 from readWrite import f2dmtxEncode
-from readWrite import f2dmtxDecode
+from readWrite import DecodeFromImage
 from PIL import Image
 from filenameFromPath import path_leaf
 from printready import MakePrintReady
@@ -94,7 +94,7 @@ def DecodeFile():
     for path in filePaths:
         images.append(Image.open(path))
     print('Beginning decode...')
-    file = f2dmtxDecode(images)
+    file = DecodeFromImage(images)
     print('Decode complete!\n\nWriting file to disk')
 
     # Write file to disk
