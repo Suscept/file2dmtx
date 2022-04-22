@@ -110,57 +110,58 @@ def DecodeFile():
 def gotoGithub():
     webbrowser.open('https://github.com/Suscept/file2dmtx')
 
-def create_main_window():
-    root = tk.Tk()
-    root.title('file2dmtx')
-    root.geometry('400x500+50+50')
-    root.resizable(False, False)
-    root.iconbitmap("./barcode.ico")
+def onReturn(event):
 
-    encodeButton = ttk.Button(
-        root,
-        text='Encode file',
-        command=EncodeFile
-    )
+# Window generation
+root = tk.Tk()
+root.title('file2dmtx')
+root.geometry('400x500+50+50')
+root.resizable(False, False)
+root.iconbitmap("./barcode.ico")
 
-    encodeButton.pack(
-        ipadx=0,
-        ipady=5,
-        side='left',
-        expand=True,
-    )
+root.bind('<Return>', onReturn)
 
-    decodeButton = ttk.Button(
-        root,
-        text='Decode matrix',
-        command=DecodeFile
-    )
+encodeButton = ttk.Button(
+    root,
+    text='Encode file',
+    command=EncodeFile
+)
 
-    decodeButton.pack(
-        ipadx=0,
-        ipady=5,
-        side='left',
-        expand=True,
-    )
+encodeButton.pack(
+    ipadx=0,
+    ipady=5,
+    side='left',
+    expand=True,
+)
 
-    # Github logo
-    githubLogo = PhotoImage(file=r"C:\Users\garfi\Pictures\Code\file2dmtx\GitHub-Mark-64px.png")
+decodeButton = ttk.Button(
+    root,
+    text='Decode matrix',
+    command=DecodeFile
+)
 
-    githubButton = ttk.Button(
-        root,
-        text='My Github',
-        image=githubLogo,
-        command=gotoGithub
-    )
+decodeButton.pack(
+    ipadx=0,
+    ipady=5,
+    side='left',
+    expand=True,
+)
 
-    githubButton.pack(
-        ipadx=0,
-        ipady=5,
-        side='bottom',
-        expand=True,
-    )
+# Github logo
+githubLogo = PhotoImage(file=r"C:\Users\garfi\Pictures\Code\file2dmtx\GitHub-Mark-64px.png")
 
-    root.mainloop()
+githubButton = ttk.Button(
+    root,
+    text='My Github',
+    image=githubLogo,
+    command=gotoGithub
+)
 
-if __name__ == "__main__":
-    create_main_window()
+githubButton.pack(
+    ipadx=0,
+    ipady=5,
+    side='bottom',
+    expand=True,
+)
+
+root.mainloop()
