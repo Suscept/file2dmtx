@@ -81,6 +81,13 @@ def f2dmtxEncode(data: bytes, filename: str):
     return images
 
 def f2dmtxDecode(image: Image):
+def GetBytesFromEncoded(partitions):
+    matrixData = mergePartitions(partitions)
+
+    # The data is encoded using ASCII85. More information in issue #3
+    decoded = base64.b85decode(matrixData[1])
+
+    return (matrixData[0], decoded)
     partitions = []
     for img in image:
         matrices = decode(img) # Get all matrices found in the image
@@ -91,10 +98,5 @@ def f2dmtxDecode(image: Image):
 
             partitions.append(matrixRaw)
     
-    matrixData = mergePartitions(partitions)
-
-    # The data is encoded using ASCII85. More information in issue #3
-    decoded = base64.b85decode(matrixData[1])
-
     # Return filename, and the file's bytes
-    return (matrixData[0], decoded)
+    return GetBytesFromEncoded(partitions=partitions)
