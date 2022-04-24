@@ -33,11 +33,14 @@ def partitionData(data: bytes, fileName: str):
 
     return(matrices)
 
+def ParsePartition(partition):
+    return tuple(bytes(partition).split(b'!', 4))
+
 def mergePartitions(partitions):
     # Decode partitions into a list of tuples
     decodedPartitions = []
     for part in partitions:
-        decodedPartitions.append(tuple(bytes(part).split(b'!', 4)))
+        decodedPartitions.append(ParsePartition(part))
 
     # Verify all partitions are for the same file
     # by checking if all partitions have the same filename as the first given partition
