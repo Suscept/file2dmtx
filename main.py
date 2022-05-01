@@ -82,6 +82,12 @@ def EncodeFile():
     # Success message
     showinfo('Success!', 'Encoded files successfully!')
 
+def WriteToDisk(filename: str, data: bytes, path: str):
+    writeFile = open(path + '/' + filename[0], "wb")
+    writeFile.write(data[1])
+    writeFile.close()
+    return True
+
 def DecodeFile():
     # Prompt user for file paths
     filePaths = filedialog.askopenfilenames()
@@ -98,11 +104,7 @@ def DecodeFile():
     print('Decode complete!\n\nWriting file to disk')
 
     # Write file to disk
-    print(file[0])
-    writeFile = open(outputPath + '/' + file[0], "wb")
-    writeFile.write(file[1])
-    writeFile.close()
-    print('File written to disk!')
+    WriteToDisk(file[0], file[1], outputPath)
 
     # Success message
     showinfo('Success!', 'Decoded file successfully!')
