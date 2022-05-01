@@ -83,8 +83,8 @@ def EncodeFile():
     showinfo('Success!', 'Encoded files successfully!')
 
 def WriteToDisk(filename: str, data: bytes, path: str):
-    writeFile = open(path + '/' + filename[0], "wb")
-    writeFile.write(data[1])
+    writeFile = open(path + '/' + filename, "wb")
+    writeFile.write(data)
     writeFile.close()
     return True
 
