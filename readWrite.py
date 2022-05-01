@@ -34,7 +34,7 @@ def partitionData(data: bytes, fileName: str):
     return(matrices)
 
 def ParsePartition(partition):
-    return tuple(bytes(partition).split(b'!', 4))
+    return tuple(bytes(partition, 'utf8').split(b'!', 4))
 
 def mergePartitions(partitions):
     # Decode partitions into a list of tuples
