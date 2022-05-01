@@ -3,14 +3,9 @@ from pylibdmtx.pylibdmtx import encode
 from pylibdmtx.pylibdmtx import decode
 from PIL import Image
 import base64
-import ntpath
 
 version = 1
 maxPartitionSize = 1555
-
-def path_leaf(path):
-    head, tail = ntpath.split(path)
-    return tail or ntpath.basename(head)
 
 def partitionIndex(e):
     return e[2]
@@ -38,11 +33,14 @@ def partitionData(data: bytes, fileName: str):
 
     return(matrices)
 
+def ParsePartition(partition):
+    return tuple(bytes(partition, 'utf8').split(b'!', 4))
+
 def mergePartitions(partitions):
     # Decode partitions into a list of tuples
     decodedPartitions = []
     for part in partitions:
-        decodedPartitions.append(tuple(bytes(part).split(b'!', 4)))
+        decodedPartitions.append(ParsePartition(part))
 
     # Verify all partitions are for the same file
     # by checking if all partitions have the same filename as the first given partition
@@ -66,33 +64,34 @@ def mergePartitions(partitions):
     filename = decodedPartitions[0][1].decode("utf-8")
     return (filename, fileData)
 
-def f2dmtxEncode(path: str):
-    # Read file
-    fileToEncode = open(path, 'rb')
-    rawData = fileToEncode.read()
-    fileToEncode.close()
-
+def f2dmtxEncode(data: bytes, filename: str):
     # Encode raw bytes for dmtx encoding
     # Encoding raw bytes into dmtx fails for unknown reasons
     #encde_Data = base64.b64encode(encde_File) # Encode with base64
-    encde_Data = base64.b85encode(rawData) # Encode with base85(Ascii85) probably the best encoding
-
-    fileName = path_leaf(path)
+    encde_Data = base64.b85encode(data) # Encode with base85(Ascii85) probably the best encoding
 
     # Partition given data
-    partitions = partitionData(encde_Data, fileName)
+    partitions = partitionData(encde_Data, filename)
 
     # Create data matrix for each partition
     images = []
     for i, item in enumerate(partitions):
         encoded = encode(item, 'base256', )
         img = Image.frombytes('RGB', (encoded.width, encoded.height), encoded.pixels)
-        matrixImg = (fileName + '_' + str(i) +'-'+ str(len(partitions) - 1), img)
+        matrixImg = (filename, img, i, len(partitions), len(item))
         images.append(matrixImg)
 
     return images
 
-def f2dmtxDecode(image: Image):
+def GetBytesFromEncoded(partitions):
+    matrixData = mergePartitions(partitions)
+
+    # The data is encoded using ASCII85. More information in issue #3
+    decoded = base64.b85decode(matrixData[1])
+
+    return (matrixData[0], decoded)
+
+def DecodeFromImage(image: Image):
     partitions = []
     for img in image:
         matrices = decode(img) # Get all matrices found in the image
@@ -103,10 +102,5 @@ def f2dmtxDecode(image: Image):
 
             partitions.append(matrixRaw)
     
-    matrixData = mergePartitions(partitions)
-
-    # The data is encoded using ASCII85. More information in issue #3
-    decoded = base64.b85decode(matrixData[1])
-
     # Return filename, and the file's bytes
-    return (matrixData[0], decoded)
+    return GetBytesFromEncoded(partitions=partitions)
