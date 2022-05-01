@@ -1,9 +1,8 @@
 import math
 import tkinter as tk
-from tkinter import PhotoImage, filedialog, ttk
+from tkinter import PhotoImage, filedialog, ttk, Text
 from tkinter.messagebox import showinfo, askokcancel, WARNING, INFO
-from readWrite import f2dmtxEncode
-from readWrite import DecodeFromImage
+from readWrite import GetBytesFromEncoded, ParsePartition, f2dmtxEncode, DecodeFromImage, mergePartitions
 from PIL import Image
 from filenameFromPath import path_leaf
 from printready import MakePrintReady
@@ -13,6 +12,8 @@ matrixSize = 1555
 matricesPerPaper = 18
 largeMatrixThreshold = 100
 outputSizeKb = 150
+
+decoding = {}
 
 def PromptOutput():
     return filedialog.askdirectory()
@@ -113,6 +114,28 @@ def gotoGithub():
     webbrowser.open('https://github.com/Suscept/file2dmtx')
 
 def onReturn(event):
+    partition = textb.get('1.0', 'end').replace("\n", '') # Get text box content
+    textb.delete(1.0, 'end') # Clear text box
+    
+    partitionParsed = ParsePartition(partition)
+
+    if partitionParsed[1] not in decoding:
+        decoding[partitionParsed[1]] = []
+    
+    # Ignore this partition if it has already been scanned
+    if partition in decoding[partitionParsed[1]]:
+        return
+    
+    decoding[partitionParsed[1]].append(partition)
+
+    # Check if all partitions have been scanned
+    if len(decoding[partitionParsed[1]]) == int(partitionParsed[3]) + 1:
+        fileData = GetBytesFromEncoded(decoding[partitionParsed[1]])
+
+        filePath = PromptOutput()
+        if WriteToDisk(partitionParsed[1].decode('utf8'), fileData[1], filePath):
+            showinfo('Success!', 'Decoded file successfully!')
+    
 
 # Window generation
 root = tk.Tk()
@@ -121,7 +144,11 @@ root.geometry('400x500+50+50')
 root.resizable(False, False)
 root.iconbitmap("./barcode.ico")
 
-root.bind('<Return>', onReturn)
+root.bind('<Return>', onReturn) # Call onReturn when enter key is pressed
+
+text = Text(root, height=8)
+textb = text
+text.pack()
 
 encodeButton = ttk.Button(
     root,
@@ -136,10 +163,23 @@ encodeButton.pack(
     expand=True,
 )
 
+decodeFromImageButton = ttk.Button(
+    root,
+    text='Decode from image',
+    command=DecodeFile
+)
+
+decodeFromImageButton.pack(
+    ipadx=0,
+    ipady=5,
+    side='left',
+    expand=True,
+)
+
 decodeButton = ttk.Button(
     root,
-    text='Decode matrix',
-    command=DecodeFile
+    text='Decode from raw',
+    command=onReturn
 )
 
 decodeButton.pack(
